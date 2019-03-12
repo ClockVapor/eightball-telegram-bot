@@ -1,5 +1,6 @@
 package clockvapor.telegram.eightball
 
+import clockvapor.telegram.tryOrNull
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.xenomachina.argparser.ArgParser
 import me.ivmg.telegram.bot
@@ -118,12 +119,8 @@ class EightBallTelegramBot(private val token: String,
             }
         }
 
-    private fun tryOrErrorMessage(func: () -> String): String = try {
-        func()
-    } catch (e: Exception) {
-        e.printStackTrace()
-        "<an error occurred>"
-    }
+    private inline fun tryOrErrorMessage(func: () -> String): String =
+        tryOrNull { func() } ?: "<an error occurred>"
 
     class Args(parser: ArgParser) {
         val token by parser.storing("-t", "--token", help = "Telegram bot token")
